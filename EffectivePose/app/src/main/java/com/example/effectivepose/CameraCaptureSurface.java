@@ -52,9 +52,6 @@ public class CameraCaptureSurface {
     public void open(String cameraId1) {
         cameraId = cameraId1;
         isIrCamera = cameraId.equals("1");
-        /*if (isIrCamera) {
-            openLight();
-        }*/
 
         SurfaceHolder.Callback mSurfaceHolderCallback = new SurfaceHolder.Callback() {
             @Override
@@ -139,21 +136,18 @@ public class CameraCaptureSurface {
     }
 
     public Image getImageFrame() {
-        // Returns the captured image frame.
-        // You need to define the ImageFrame class based on your data structure.
+        // Returns the captured image frame
+        // Need to define the ImageFrame class
         return imageFrame;
     }
 
     public void startCapture() {
-        // Method to start the capture process.
+        // Method to start the capture process
         capture = true;
     }
 
     public void close() {
-        // Method to release camera resources.
-        /*if (isIrCamera) {
-            closeLight();
-        }*/
+        // Method to release camera resources
         if (cameraDevice != null) {
             cameraDevice.close();
         }
