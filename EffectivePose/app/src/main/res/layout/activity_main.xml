@@ -6,12 +6,12 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <SurfaceView
-        android:id="@+id/imageView"
+    <androidx.camera.view.PreviewView
+        android:id="@+id/previewWindow"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginBottom="5dp"
-        android:contentDescription="image_frame"
+        android:contentDescription="@string/frame_for_live_video_stream"
         app:layout_constraintBottom_toTopOf="@+id/button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -26,7 +26,7 @@
         android:alpha=".6"
         android:backgroundTint="#0068BA"
         android:scaleX=".95"
-        android:text="Toggle Overlay"
+        android:text="@string/toggle_overlay"
         android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
