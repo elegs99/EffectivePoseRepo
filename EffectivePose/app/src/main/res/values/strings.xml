@@ -1,5 +1,5 @@
 <resources>
     <string name="app_name">EffectivePose</string>
     <string name="frame_for_live_video_stream">Frame for live video stream</string>
-    <string name="toggle_overlay">Toggle Overlay</string>
+    <string name="toggle_overlay">Disable Overlay</string>
 </resources>

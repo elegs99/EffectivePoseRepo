@@ -20,6 +20,8 @@ import android.media.Image;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.Size;
+import android.view.View;
+import android.widget.Button;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -44,6 +46,8 @@ public class MainActivity extends AppCompatActivity {
     private PoseDetector poseDetector;
     private ImageAnalysis imageAnalysis;
     private PoseOverlayView poseOverlayView;
+    private Button toggleOverlay;
+    private boolean overlayEnabled = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +56,17 @@ public class MainActivity extends AppCompatActivity {
 
         previewWindow = findViewById(R.id.previewWindow);
         poseOverlayView = findViewById(R.id.poseOverlayWindow);
+
+        toggleOverlay = findViewById(R.id.overlayToggle);
+        toggleOverlay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                overlayEnabled = !overlayEnabled;
+                toggleOverlay.setText(overlayEnabled ? "Disable Overlay" : "Enable Overlay");
+                poseOverlayView.clearCanvas();
+            }
+        });
+
 
         if (ContextCompat.checkSelfPermission(MainActivity.this, android.Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.CAMERA}, REQUEST_CAMERA_PERMISSION);
@@ -74,7 +89,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void StartCamera(ProcessCameraProvider cameraProvider) {
-        CameraSelector cameraSelector = CameraSelector.DEFAULT_FRONT_CAMERA;
+        CameraSelector cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA;
         @SuppressLint("RestrictedApi") Preview preview = new Preview.Builder()
                 .build();
 
@@ -97,12 +112,16 @@ public class MainActivity extends AppCompatActivity {
     }
     private void AnalyzePose(Pose result) {
         List<PoseLandmark> allPoseLandmarks = result.getAllPoseLandmarks();
-        poseOverlayView.setLandmarks(allPoseLandmarks);
+        if (overlayEnabled) {
+            poseOverlayView.setLandmarks(allPoseLandmarks);
+        } else {
+            poseOverlayView.invalidate();
+            poseOverlayView.clearCanvas();
+        }
         for (PoseLandmark landmark : allPoseLandmarks) {
             String logMessage = String.format("Landmark ID: %s, Position: %s", landmark.getLandmarkType(), landmark.getPosition().toString());
             Log.i("Custom4Me", logMessage);
         }
-
     }
     private ImageAnalysis buildImageAnalysis() {
         ImageAnalysis imageAnalysisTemp = new ImageAnalysis.Builder()
