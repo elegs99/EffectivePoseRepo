@@ -11,12 +11,23 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginBottom="5dp"
-        android:contentDescription="@string/frame_for_live_video_stream"
+        android:background="@android:color/transparent"
         app:layout_constraintBottom_toTopOf="@+id/button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:src="@tools:sample/avatars" />
+
+    <com.example.effectivepose.PoseOverlayView
+        android:id="@+id/poseOverlayWindow"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="5dp"
+        android:background="@android:color/transparent"
+        app:layout_constraintBottom_toTopOf="@+id/button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/button"
