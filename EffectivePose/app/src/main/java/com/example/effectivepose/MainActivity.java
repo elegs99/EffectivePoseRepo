@@ -16,6 +16,7 @@ import androidx.core.content.ContextCompat;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
 import android.media.Image;
 import android.os.Bundle;
 import android.util.Log;
@@ -58,15 +59,25 @@ public class MainActivity extends AppCompatActivity {
         poseOverlayView = findViewById(R.id.poseOverlayWindow);
 
         toggleOverlay = findViewById(R.id.overlayToggle);
-        toggleOverlay.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                overlayEnabled = !overlayEnabled;
-                toggleOverlay.setText(overlayEnabled ? "Disable Overlay" : "Enable Overlay");
-                poseOverlayView.clearCanvas();
-            }
-        });
+        if (toggleOverlay != null) { // Check if the toggleOverlay button exists in the layout
+            toggleOverlay.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    overlayEnabled = !overlayEnabled;
+                    // Update the button text based on the state of overlayEnabled
+                    toggleOverlay.setText(overlayEnabled ? "Disable Overlay" : "Enable Overlay");
+                    if (!overlayEnabled) {
+                        poseOverlayView.clearCanvas(); // Clear the canvas if the overlay is disabled
+                    }
+                }
+            });
+        }
 
+        if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
+            poseOverlayView.setTranslation(0, 200);
+        }else if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){
+            poseOverlayView.setTranslation(-175, 50);
+        }
 
         if (ContextCompat.checkSelfPermission(MainActivity.this, android.Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.CAMERA}, REQUEST_CAMERA_PERMISSION);
@@ -94,11 +105,11 @@ public class MainActivity extends AppCompatActivity {
                 .build();
 
         preview.setSurfaceProvider(previewWindow.getSurfaceProvider());
-        Log.i("Custom4Me", "starting camera");
+        //Log.i("Custom4Me", "starting camera");
 
         try {
-            PoseDetectorOptions options = new PoseDetectorOptions.Builder()
-                    .setDetectorMode(PoseDetectorOptions.STREAM_MODE)
+            AccuratePoseDetectorOptions options = new AccuratePoseDetectorOptions.Builder()
+                    .setDetectorMode(AccuratePoseDetectorOptions.STREAM_MODE)
                     .build();
             poseDetector = PoseDetection.getClient(options);
 
@@ -118,10 +129,10 @@ public class MainActivity extends AppCompatActivity {
             poseOverlayView.invalidate();
             poseOverlayView.clearCanvas();
         }
-        for (PoseLandmark landmark : allPoseLandmarks) {
+        /*for (PoseLandmark landmark : allPoseLandmarks) {
             String logMessage = String.format("Landmark ID: %s, Position: %s", landmark.getLandmarkType(), landmark.getPosition().toString());
             Log.i("Custom4Me", logMessage);
-        }
+        }*/
     }
     private ImageAnalysis buildImageAnalysis() {
         ImageAnalysis imageAnalysisTemp = new ImageAnalysis.Builder()
@@ -131,20 +142,19 @@ public class MainActivity extends AppCompatActivity {
             @OptIn(markerClass = ExperimentalGetImage.class)
             @Override
             public void analyze(@NonNull ImageProxy imageProxy) {
-                Log.d("Custom4Me", "Starting image analysis.");
-
+                //Log.d("Custom4Me", "Starting image analysis.");
                 final long analysisStartTime = System.currentTimeMillis();
                 Image mediaImage = imageProxy.getImage();
 
                 if (mediaImage != null) {
-                    Log.d("Custom4Me", String.format("Analyzing image with dimensions: %dx%d.", mediaImage.getWidth(), mediaImage.getHeight()));
+                    //Log.d("Custom4Me", String.format("Analyzing image with dimensions: %dx%d.", mediaImage.getWidth(), mediaImage.getHeight()));
 
                     InputImage image = InputImage.fromMediaImage(mediaImage, imageProxy.getImageInfo().getRotationDegrees());
                     poseDetector.process(image)
                             .addOnSuccessListener(new OnSuccessListener<Pose>() {
                                 @Override
                                 public void onSuccess(Pose pose) {
-                                    Log.d("Custom4Me", "Pose detection succeeded.");
+                                    //Log.d("Custom4Me", "Pose detection succeeded.");
                                     AnalyzePose(pose);
                                 }
                             })
@@ -159,16 +169,16 @@ public class MainActivity extends AppCompatActivity {
                             .addOnFailureListener(new OnFailureListener() {
                                 @Override
                                 public void onFailure(@NonNull Exception e) {
-                                    Log.e("Custom4Me", "Pose detection failed.", e);
+                                    //Log.e("Custom4Me", "Pose detection failed.", e);
                                 }
                             });
                 } else {
-                    Log.w("Custom4Me", "No media image available for analysis.");
+                    //Log.w("Custom4Me", "No media image available for analysis.");
                     imageProxy.close();
                 }
             }
         });
-        Log.i("Custom4Me", "finished analyzing!");
+        //Log.i("Custom4Me", "finished analyzing!");
         return imageAnalysisTemp;
     }
 }

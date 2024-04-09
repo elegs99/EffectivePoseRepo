@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -19,14 +20,12 @@ public class PoseOverlayView extends View {
     private List<PoseLandmark> landmarks;
     private Paint paint1 = new Paint();
     private Paint paint2 = new Paint();
-    private float scaleX = 2.0f;
-    private float scaleY = 2.25f;
-    private float offsetX = -100.0f;
+    private float scaleX = 2.25f;
+    private float scaleY = 2.2f;
+    private float offsetX = -175.0f;
     private float offsetY = 50.0f;
     private boolean isFlipped = false;
     private boolean canvasCleared = false;
-    private float prevX;
-    private float prevY;
     private final int[][] connectedJoints = {{11, 12}, {11, 13}, {13, 15}, {15, 19}, // Chest + Right Arm
                                                 {12, 14}, {14, 16}, {16, 20}, // Left Arm
                                                 {12, 24}, {11, 23}, {23, 24}, // Stomach
@@ -46,12 +45,12 @@ public class PoseOverlayView extends View {
 
     private void init() {
         landmarks = new ArrayList<>();
-        paint1.setColor(Color.RED); // Example color
+        paint1.setColor(Color.RED);
         paint1.setStyle(Paint.Style.FILL);
-        paint1.setStrokeWidth(5f); // Example stroke width
-        paint2.setColor(Color.GREEN); // Example color
+
+        paint2.setColor(Color.GREEN);
         paint2.setStyle(Paint.Style.FILL);
-        paint2.setStrokeWidth(5f); // Example stroke width
+        paint2.setStrokeWidth(3f);
     }
 
     public void setLandmarks(List<PoseLandmark> landmarks) {
@@ -82,6 +81,7 @@ public class PoseOverlayView extends View {
 
     @Override
     protected void onDraw(@NonNull Canvas canvas) {
+        final long analysisStartTime = System.currentTimeMillis();
         super.onDraw(canvas);
         if (landmarks == null || landmarks.isEmpty()) {
             return;
@@ -93,12 +93,14 @@ public class PoseOverlayView extends View {
         }
         drawLinesBetweenJoints(canvas);
         for (PoseLandmark landmark : landmarks) {
-            if (landmark.getInFrameLikelihood() > .7f) {
+            if (landmark.getInFrameLikelihood() > .9f && landmark.getLandmarkType() != 18 && landmark.getLandmarkType() != 22 && landmark.getLandmarkType() != 17 && landmark.getLandmarkType() != 21) {
                 float x = translateX(landmark.getPosition().x);
                 float y = translateY(landmark.getPosition().y);
-                canvas.drawCircle(x, y, 5, paint1);
+                canvas.drawCircle(x, y, 4, paint1);
             }
         }
+        long duration = System.currentTimeMillis() - analysisStartTime;
+        Log.d("Custom4Me", "Draw call completed in " + duration + " ms");
     }
     private void drawLinesBetweenJoints(Canvas canvas) {
         // Ensure landmarks list is not null and has enough elements
@@ -116,7 +118,7 @@ public class PoseOverlayView extends View {
             PoseLandmark landmark2 = landmarks.get(index2);
 
             // Check if both landmarks are in frame with a high likelihood
-            if (landmark1.getInFrameLikelihood() > 0.7f && landmark2.getInFrameLikelihood() > 0.7f) {
+            if (landmark1.getInFrameLikelihood() > 0.9f && landmark2.getInFrameLikelihood() > 0.9f) {
                 // Translate coordinates for drawing
                 float x1 = translateX(landmark1.getPosition().x);
                 float y1 = translateY(landmark1.getPosition().y);
