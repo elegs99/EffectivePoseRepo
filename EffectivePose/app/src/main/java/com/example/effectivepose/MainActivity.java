@@ -34,7 +34,6 @@ import com.google.mlkit.vision.pose.Pose;
 import com.google.mlkit.vision.pose.PoseDetection;
 import com.google.mlkit.vision.pose.PoseDetector;
 import com.google.mlkit.vision.pose.PoseLandmark;
-import com.google.mlkit.vision.pose.accurate.AccuratePoseDetectorOptions;
 import com.google.mlkit.vision.pose.defaults.PoseDetectorOptions;
 
 import java.util.List;
@@ -45,7 +44,6 @@ public class MainActivity extends AppCompatActivity {
     private ProcessCameraProvider cameraProvider;
     private PreviewView previewWindow;
     private PoseDetector poseDetector;
-    private ImageAnalysis imageAnalysis;
     private PoseOverlayView poseOverlayView;
     private Button toggleOverlay;
     private boolean overlayEnabled = true;
@@ -74,9 +72,9 @@ public class MainActivity extends AppCompatActivity {
         }
 
         if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
-            poseOverlayView.setTranslation(0, 200);
+            poseOverlayView.setTranslation(0f, 200f);
         }else if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){
-            poseOverlayView.setTranslation(-175, 50);
+            poseOverlayView.setTranslation(-175f, 50f);
         }
 
         if (ContextCompat.checkSelfPermission(MainActivity.this, android.Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
@@ -108,12 +106,10 @@ public class MainActivity extends AppCompatActivity {
         //Log.i("Custom4Me", "starting camera");
 
         try {
-            AccuratePoseDetectorOptions options = new AccuratePoseDetectorOptions.Builder()
-                    .setDetectorMode(AccuratePoseDetectorOptions.STREAM_MODE)
-                    .build();
+            PoseDetectorOptions options = new PoseDetectorOptions.Builder().build();
             poseDetector = PoseDetection.getClient(options);
 
-            imageAnalysis = buildImageAnalysis();
+            ImageAnalysis imageAnalysis = buildImageAnalysis();
 
             cameraProvider.unbindAll();
             cameraProvider.bindToLifecycle(this, cameraSelector, preview, imageAnalysis);
@@ -135,8 +131,9 @@ public class MainActivity extends AppCompatActivity {
         }*/
     }
     private ImageAnalysis buildImageAnalysis() {
-        ImageAnalysis imageAnalysisTemp = new ImageAnalysis.Builder()
+        @SuppressLint("RestrictedApi") ImageAnalysis imageAnalysisTemp = new ImageAnalysis.Builder()
                 .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
+                .setDefaultResolution(new Size(480,360))
                 .build();
         imageAnalysisTemp.setAnalyzer(ContextCompat.getMainExecutor(this), new ImageAnalysis.Analyzer() {
             @OptIn(markerClass = ExperimentalGetImage.class)

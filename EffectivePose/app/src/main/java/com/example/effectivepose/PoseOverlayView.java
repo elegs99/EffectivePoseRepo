@@ -18,17 +18,17 @@ import java.util.List;
 
 public class PoseOverlayView extends View {
     private List<PoseLandmark> landmarks;
-    private Paint paint1 = new Paint();
-    private Paint paint2 = new Paint();
+    private final Paint paint1 = new Paint();
+    private final Paint paint2 = new Paint();
     private float scaleX = 2.25f;
-    private float scaleY = 2.2f;
-    private float offsetX = -175.0f;
-    private float offsetY = 50.0f;
+    private float scaleY = 2.25f;
+    private float offsetX = -175f;
+    private float offsetY = 50f;
     private boolean isFlipped = false;
     private boolean canvasCleared = false;
-    private final int[][] connectedJoints = {{11, 12}, {11, 13}, {13, 15}, {15, 19}, // Chest + Right Arm
-                                                {12, 14}, {14, 16}, {16, 20}, // Left Arm
-                                                {12, 24}, {11, 23}, {23, 24}, // Stomach
+    private final int[][] connectedJoints = {{11, 13}, {13, 15}, {15, 17}, {15, 19}, {17, 19}, // Right Arm
+                                                {12, 14}, {14, 16}, {16, 18}, {16, 20}, {18, 20}, // Left Arm
+                                                {11, 12}, {12, 24}, {11, 23}, {23, 24}, // Stomach
                                                 {24, 26}, {26, 28}, {23, 25}, {25, 27}, // Legs
                                                 {28, 30}, {30, 32}, {27, 29}, {29, 31}}; // Feet
 
@@ -93,7 +93,7 @@ public class PoseOverlayView extends View {
         }
         drawLinesBetweenJoints(canvas);
         for (PoseLandmark landmark : landmarks) {
-            if (landmark.getInFrameLikelihood() > .9f && landmark.getLandmarkType() != 18 && landmark.getLandmarkType() != 22 && landmark.getLandmarkType() != 17 && landmark.getLandmarkType() != 21) {
+            if (landmark.getInFrameLikelihood() > .95f && landmark.getLandmarkType() != 18 && landmark.getLandmarkType() != 22 && landmark.getLandmarkType() != 17 && landmark.getLandmarkType() != 21) {
                 float x = translateX(landmark.getPosition().x);
                 float y = translateY(landmark.getPosition().y);
                 canvas.drawCircle(x, y, 4, paint1);
@@ -118,7 +118,7 @@ public class PoseOverlayView extends View {
             PoseLandmark landmark2 = landmarks.get(index2);
 
             // Check if both landmarks are in frame with a high likelihood
-            if (landmark1.getInFrameLikelihood() > 0.9f && landmark2.getInFrameLikelihood() > 0.9f) {
+            if (landmark1.getInFrameLikelihood() > 0.95f && landmark2.getInFrameLikelihood() > 0.95f) {
                 // Translate coordinates for drawing
                 float x1 = translateX(landmark1.getPosition().x);
                 float y1 = translateY(landmark1.getPosition().y);
