@@ -23,6 +23,7 @@ import android.util.Log;
 import android.util.Size;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -46,7 +47,10 @@ public class MainActivity extends AppCompatActivity {
     private PoseDetector poseDetector;
     private PoseOverlayView poseOverlayView;
     private Button toggleOverlay;
+    private TextView fpsText;
     private boolean overlayEnabled = true;
+    private float avgFPS;
+    private int fpsIndex = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +59,7 @@ public class MainActivity extends AppCompatActivity {
 
         previewWindow = findViewById(R.id.previewWindow);
         poseOverlayView = findViewById(R.id.poseOverlayWindow);
+        fpsText = findViewById(R.id.textView);
 
         toggleOverlay = findViewById(R.id.overlayToggle);
         if (toggleOverlay != null) { // Check if the toggleOverlay button exists in the layout
@@ -70,11 +75,17 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
         }
-
+        /*
         if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
             poseOverlayView.setTranslation(0f, 200f);
         }else if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){
-            poseOverlayView.setTranslation(-175f, 50f);
+            poseOverlayView.setTranslation(-25f, 0f);
+        }
+        */
+        if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
+            poseOverlayView.setTranslation(25f, 350f);
+        }else if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){
+            poseOverlayView.setTranslation(-275f, 75f);
         }
 
         if (ContextCompat.checkSelfPermission(MainActivity.this, android.Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
@@ -151,6 +162,11 @@ public class MainActivity extends AppCompatActivity {
                             .addOnSuccessListener(new OnSuccessListener<Pose>() {
                                 @Override
                                 public void onSuccess(Pose pose) {
+                                    long duration = System.currentTimeMillis() - analysisStartTime;
+                                    fpsIndex++;
+                                    avgFPS += (float) 1000 / duration;
+                                    fpsText.setText(String.format("fps: %.2f", (avgFPS / fpsIndex)));
+                                    Log.d("Custom4Me", "Pose detection completed in " + duration + " ms");
                                     //Log.d("Custom4Me", "Pose detection succeeded.");
                                     AnalyzePose(pose);
                                 }
@@ -158,8 +174,8 @@ public class MainActivity extends AppCompatActivity {
                             .addOnCompleteListener(new OnCompleteListener<Pose>() {
                                 @Override
                                 public void onComplete(@NonNull Task<Pose> task) {
-                                    long duration = System.currentTimeMillis() - analysisStartTime;
-                                    Log.d("Custom4Me", "Pose detection completed in " + duration + " ms");
+
+                                    //Log.d("Custom4Me", "Pose detection completed in " + duration + " ms");
                                     imageProxy.close();
                                 }
                             })

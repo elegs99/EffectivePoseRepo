@@ -20,10 +20,15 @@ public class PoseOverlayView extends View {
     private List<PoseLandmark> landmarks;
     private final Paint paint1 = new Paint();
     private final Paint paint2 = new Paint();
-    private float scaleX = 2.25f;
+
+    /*private float scaleX = 2.25f;
     private float scaleY = 2.25f;
     private float offsetX = -175f;
-    private float offsetY = 50f;
+    private float offsetY = 50f;*/
+    private float scaleX = 3.25f;
+    private float scaleY = 3.25f;
+    private float offsetX = -250f;
+    private float offsetY = 0;
     private boolean isFlipped = false;
     private boolean canvasCleared = false;
     private final int[][] connectedJoints = {{11, 13}, {13, 15}, {15, 17}, {15, 19}, {17, 19}, // Right Arm
