@@ -75,18 +75,19 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
         }
-        /*
+
         if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
             poseOverlayView.setTranslation(0f, 200f);
         }else if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){
-            poseOverlayView.setTranslation(-25f, 0f);
+            poseOverlayView.setTranslation(-175f, 50f);
         }
-        */
+
+        /*
         if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
             poseOverlayView.setTranslation(25f, 350f);
         }else if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){
             poseOverlayView.setTranslation(-275f, 75f);
-        }
+        }*/
 
         if (ContextCompat.checkSelfPermission(MainActivity.this, android.Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.CAMERA}, REQUEST_CAMERA_PERMISSION);
