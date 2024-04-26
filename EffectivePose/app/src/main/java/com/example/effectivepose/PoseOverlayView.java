@@ -20,13 +20,13 @@ public class PoseOverlayView extends View {
     private List<PoseLandmark> landmarks;
     private final Paint paint1 = new Paint();
     private final Paint paint2 = new Paint();
-
+    //Samsung A03s
     private float scaleX = 2.25f;
     private float scaleY = 2.25f;
     private float offsetX = -175f;
     private float offsetY = 50f;
     /*
-
+    //Google Pixel 8 Pro
     private float scaleX = 3.25f;
     private float scaleY = 3.25f;
     private float offsetX = -250f;

@@ -75,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
         }
-
+        //Samsung A03s
         if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
             poseOverlayView.setTranslation(0f, 200f);
         }else if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){
@@ -83,6 +83,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         /*
+        //Google Pixel 8 Pro
         if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
             poseOverlayView.setTranslation(25f, 350f);
         }else if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){
@@ -167,7 +168,7 @@ public class MainActivity extends AppCompatActivity {
                                     fpsIndex++;
                                     avgFPS += (float) 1000 / duration;
                                     fpsText.setText(String.format("fps: %.2f", (avgFPS / fpsIndex)));
-                                    Log.d("Custom4Me", "Pose detection completed in " + duration + " ms");
+                                    //Log.d("Custom4Me", "Pose detection completed in " + duration + " ms");
                                     //Log.d("Custom4Me", "Pose detection succeeded.");
                                     AnalyzePose(pose);
                                 }
